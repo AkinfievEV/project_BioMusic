@@ -1,0 +1,249 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5">
+  <diagram id="biomusic_uml" name="BioMusic UML">
+    <mxGraphModel dx="1299" dy="586" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="qobject" value="&lt;&lt;Qt Framework&gt;&gt;&#xa;QObject" style="shape=mxgraph.uml.class;fontStyle=1;fontSize=12;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="620" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qbtsocket" value="&lt;&lt;Qt Framework&gt;&gt;&#xa;QBluetoothSocket" style="shape=mxgraph.uml.class;fontStyle=1;fontSize=12;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="120" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qbtdda" value="&lt;&lt;Qt Framework&gt;&gt;&#xa;QBluetoothDeviceDiscoveryAgent" style="shape=mxgraph.uml.class;fontStyle=1;fontSize=12;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="370" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qaudiosink" value="&lt;&lt;Qt Framework&gt;&gt;&#xa;QAudioSink" style="shape=mxgraph.uml.class;fontStyle=1;fontSize=12;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="870" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qiodevice" value="&lt;&lt;Qt Framework&gt;&gt;&#xa;QIODevice" style="shape=mxgraph.uml.class;fontStyle=1;fontSize=12;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="1120" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="main" value="main()" style="swimlane;startSize=28;fontStyle=1;fontSize=13;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="590" y="170" width="300" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="main_attrs" value="QGuiApplication app&#xa;QQmlApplicationEngine engine&#xa;BluetoothManager btManager&#xa;MidiSynthesizer synthesizer" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="main" vertex="1">
+          <mxGeometry y="28" width="260" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="main_methods" value="engine.load(qrc:/main.qml)&#xa;engine.rootContext()-&gt;setContextProperty()" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="main" vertex="1">
+          <mxGeometry y="104" width="260" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="btmgr" value="BluetoothManager" style="swimlane;startSize=28;fontStyle=1;fontSize=13;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="60" y="420" width="340" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="btmgr_attrs" value="- m_socket : QBluetoothSocket*&#xa;- m_discoveryAgent : QBluetoothDeviceDiscoveryAgent*&#xa;- m_isConnected : bool&#xa;- m_deviceName : QString&#xa;- m_currentBPM : int&#xa;- m_dataBuffer : QString" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="btmgr" vertex="1">
+          <mxGeometry y="30" width="340" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="btmgr_methods" value="+ startDiscovery()&#xa;+ connectToDevice(address : QString)&#xa;+ disconnectDevice()&#xa;+ setMusicMode(mode : QString)&#xa;+ sendCommand(command : QString)&#xa;- parseData(line : QString)&#xa;- onReadyRead()&#xa;- onSocketConnected()&#xa;- onSocketDisconnected()&#xa;- stopAndDeleteAgent()&#xa;~ noteReceived(pitch : int, velocity : int)&#xa;~ bpmChanged()&#xa;~ deviceDiscovered(name, addr : QString)&#xa;~ discoveryFinished()&#xa;~ errorOccurred(message : QString)" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="btmgr" vertex="1">
+          <mxGeometry y="120" width="320" height="202" as="geometry" />
+        </mxCell>
+        <mxCell id="synth" value="MidiSynthesizer" style="swimlane;startSize=28;fontStyle=1;fontSize=13;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="1000" y="420" width="360" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="synth_attrs" value="- m_audioSink : QAudioSink*&#xa;- m_audioDevice : QIODevice*&#xa;- m_sampleRate : int = 44100&#xa;- m_initialized : bool&#xa;- m_useInt16 : bool" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="synth" vertex="1">
+          <mxGeometry y="28" width="320" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="synth_note" value="push-mode: sink.start() → QIODevice*" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;fontStyle=0;rounded=0;" parent="synth" vertex="1">
+          <mxGeometry y="190" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="synth_methods" value="+ playNote(pitch : int, velocity : int)&#xa;- playSamples(samples : QVector&lt;float&gt;)&#xa;- ensureAudioReady() : bool&#xa;~ notePlaying(pitch : int)&#xa;[static] + pitchToFrequency(pitch : int) : double" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="synth" vertex="1">
+          <mxGeometry y="110" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-10" value="" style="endArrow=none;html=1;rounded=0;" parent="synth" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint y="190" as="sourcePoint" />
+            <mxPoint x="360" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wavegen" value="&lt;&lt;utility&gt;&gt; WaveGenerator" style="swimlane;startSize=28;fontStyle=1;fontSize=13;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="1000" y="840" width="360" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="wavegen_attrs" value="(нет полей — только статические методы)" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;fontStyle=0;rounded=0;" parent="wavegen" vertex="1">
+          <mxGeometry y="28" width="320" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="wavegen_methods" value="[static] + generateNote(pitch, durationMs, sampleRate) : QVector&lt;float&gt;&#xa;[static] - adsrEnvelope(t, totalDur, A, D, S, R) : double&#xa;Аддитивный синтез: 4 гармоники (1.0 + 0.30 + 0.12 + 0.06)" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="wavegen" vertex="1">
+          <mxGeometry y="64" width="360" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-13" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="wavegen" vertex="1">
+          <mxGeometry y="56" width="360" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="qml" value="&lt;&lt;QML View&gt;&gt; main.qml" style="swimlane;startSize=28;fontStyle=1;fontSize=13;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="590" y="660" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="qml_attrs" value="btManager (context property)&#xa;synthesizer (context property)&#xa;ListView: найденные устройства&#xa;AnimatedHeart: пульс-анимация" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="qml" vertex="1">
+          <mxGeometry y="28" width="300" height="88" as="geometry" />
+        </mxCell>
+        <mxCell id="qml_methods" value="onBpmChanged → обновить UI&#xa;btManager.startDiscovery()&#xa;btManager.connectToDevice(addr)&#xa;btManager.setMusicMode(mode)" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="qml" vertex="1">
+          <mxGeometry y="99" width="300" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="esp32" value="&lt;&lt;external&gt;&gt; ESP32 + MAX30102" style="swimlane;startSize=28;fontStyle=1;fontSize=13;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="60" y="840" width="340" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="esp32_attrs" value="BPM sliding window (RATE_SIZE=8)&#xa;EMA filter (α=0.15 / α=0.6 fast-start)&#xa;Markov chain: scale[8] notes&#xa;validBeatCount, fastStartDone" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="esp32" vertex="1">
+          <mxGeometry y="28" width="300" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="esp32_proto" value="→ &quot;BPM:75\n&quot;&#xa;→ &quot;NOTE:64,95\n&quot;&#xa;← &quot;MODE_WORK\n&quot;&#xa;← &quot;STATUS\n&quot; / &quot;PING\n&quot;" style="text;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;rounded=0;" parent="esp32" vertex="1">
+          <mxGeometry y="90" width="300" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="e_esp_bt" value="Bluetooth SPP" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;dashed=1;fontSize=10;fontStyle=1;rounded=0;" parent="1" source="esp32" target="btmgr" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="210" y="840" />
+              <mxPoint x="210" y="750" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JE9aaElgBSz2aCuMrO62-2" value="&lt;b&gt;использует&lt;/b&gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;curved=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.554;exitY=0.003;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="synth" target="qaudiosink" edge="1">
+          <mxGeometry x="-0.3438" width="160" relative="1" as="geometry">
+            <mxPoint x="990" y="270" as="sourcePoint" />
+            <mxPoint x="1160" y="100" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1200" y="130" />
+              <mxPoint x="1080" y="130" />
+              <mxPoint x="970" y="130" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JE9aaElgBSz2aCuMrO62-3" value="&lt;b&gt;использует&lt;/b&gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;curved=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" parent="1" source="synth" target="qiodevice" edge="1">
+          <mxGeometry x="-0.125" width="160" relative="1" as="geometry">
+            <mxPoint x="1410" y="480" as="sourcePoint" />
+            <mxPoint x="1330" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1270" y="150" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JE9aaElgBSz2aCuMrO62-5" value="" style="endArrow=open;html=1;endSize=12;startArrow=diamondThin;startSize=14;startFill=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=bottom;rounded=0;curved=0;" parent="1" edge="1">
+          <mxGeometry x="-1" y="3" relative="1" as="geometry">
+            <mxPoint x="890" y="300" as="sourcePoint" />
+            <mxPoint x="1120" y="420" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="890" y="300" />
+              <mxPoint x="1120" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JE9aaElgBSz2aCuMrO62-6" value="&lt;b&gt;создаёт&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" parent="JE9aaElgBSz2aCuMrO62-5" vertex="1" connectable="0">
+          <mxGeometry x="0.0173" y="1" relative="1" as="geometry">
+            <mxPoint x="-69" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JE9aaElgBSz2aCuMrO62-7" value="" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0.44;exitY=0.003;exitDx=0;exitDy=0;curved=0;exitPerimeter=0;" parent="1" source="synth" target="qobject" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="980" y="380" as="sourcePoint" />
+            <mxPoint x="1140" y="380" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1160" y="150" />
+              <mxPoint x="970" y="150" />
+              <mxPoint x="770" y="150" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="L2SlXyHdXh0GN9lYMC03-1" value="" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=0.765;exitY=0;exitDx=0;exitDy=0;curved=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;exitPerimeter=0;" parent="1" source="btmgr" target="qobject" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="545" y="470" as="sourcePoint" />
+            <mxPoint x="720" y="110" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="320" y="150" />
+              <mxPoint x="670" y="150" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="L2SlXyHdXh0GN9lYMC03-3" value="&lt;b&gt;использует&lt;/b&gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;curved=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="btmgr" target="qbtdda" edge="1">
+          <mxGeometry x="-0.3571" width="160" relative="1" as="geometry">
+            <mxPoint x="230.00000000000023" y="340" as="sourcePoint" />
+            <mxPoint x="290" y="190" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="230" y="130" />
+              <mxPoint x="340" y="130" />
+              <mxPoint x="470" y="130" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="L2SlXyHdXh0GN9lYMC03-5" value="&lt;b&gt;ссылается&lt;/b&gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;curved=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="synth" target="wavegen" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1250.0000000000002" y="850" as="sourcePoint" />
+            <mxPoint x="1250.0000000000002" y="760" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="L2SlXyHdXh0GN9lYMC03-6" value="" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" target="synth_methods" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="400" y="590" as="sourcePoint" />
+            <mxPoint x="970" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-12" value="&lt;span style=&quot;font-weight: 700;&quot;&gt;noteReceived(pitch,velocity)&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="L2SlXyHdXh0GN9lYMC03-6" vertex="1" connectable="0">
+          <mxGeometry x="-0.4118" relative="1" as="geometry">
+            <mxPoint x="43" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-2" value="" style="endArrow=open;html=1;endSize=12;startArrow=diamondThin;startSize=14;startFill=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=bottom;rounded=0;entryX=0.88;entryY=-0.003;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="btmgr" edge="1">
+          <mxGeometry x="-1" y="3" relative="1" as="geometry">
+            <mxPoint x="590" y="300" as="sourcePoint" />
+            <mxPoint x="600" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="590" y="300" />
+              <mxPoint x="359" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-3" value="&lt;b&gt;создаёт&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="dt_d9zPLCByDk498_IUE-2" vertex="1" connectable="0">
+          <mxGeometry x="0.0173" y="1" relative="1" as="geometry">
+            <mxPoint x="69" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-4" value="&lt;b&gt;использует&lt;/b&gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=1;curved=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;exitX=0.323;exitY=-0.004;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="btmgr" target="qbtsocket" edge="1">
+          <mxGeometry x="-0.1298" width="160" relative="1" as="geometry">
+            <mxPoint x="170" y="330" as="sourcePoint" />
+            <mxPoint x="180.00000000000023" y="240" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-6" value="" style="endArrow=none;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="60" y="930" as="sourcePoint" />
+            <mxPoint x="400" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-7" value="" style="endArrow=none;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="60" y="540" as="sourcePoint" />
+            <mxPoint x="400" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-8" value="" style="endArrow=none;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="590" y="270" as="sourcePoint" />
+            <mxPoint x="890" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-9" value="" style="endArrow=none;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1000" y="530" as="sourcePoint" />
+            <mxPoint x="1360" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dt_d9zPLCByDk498_IUE-17" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0;exitDx=0;exitDy=0;" parent="1" source="qml_methods" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="750" as="sourcePoint" />
+            <mxPoint x="890" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="L2SlXyHdXh0GN9lYMC03-4" value="&lt;span style=&quot;font-weight: 700;&quot;&gt;playNote()&lt;/span&gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;curved=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="qml" target="main" edge="1">
+          <mxGeometry x="-0.5882" width="160" relative="1" as="geometry">
+            <mxPoint x="760" y="640" as="sourcePoint" />
+            <mxPoint x="590.0000000000002" y="410" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
